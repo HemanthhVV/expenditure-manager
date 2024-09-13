@@ -1,0 +1,5 @@
+#avoid secrets files
+.env
+
+#avoid venv
+.venv/
