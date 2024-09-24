@@ -5,3 +5,12 @@ Content-Type: application/json
     "username":"hemanthh"
 }
 
+###
+
+POST http://127.0.0.1:8000/authentication/validateEmail
+Content-Type: application/json
+
+{
+    "email":"chad@gmail.co"
+}
+
