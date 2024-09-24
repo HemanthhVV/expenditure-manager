@@ -74,3 +74,10 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
     display: block !important;
 }
+
+.togglePWD{
+    right: 10px;
+    cursor: pointer;
+    color: blue;
+    transform: scale(1);
+}
