@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid p-3">
+    <h5>Preferred Currency</h5>
+    {% include "partials/_message.html" %}
+    <form action="{% url "preferences" %}" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            <select class="custom-select" id="inputGroupSelect04" name="currency">
+                {% if userpreference.currency %}
+
+                    <option selected="{{userpreference.currency}}">{{userpreference.currency}}</option>
+                    {% comment %} {% for currency in currencies %}
+                        <option value="{{ currency.name }}">{{ currency.name }} - {{ currency.country }}</option>
+                    {% endfor %} {% endcomment %}
+
+                {% comment %} {% else %} {% endcomment %}
+
+                    {% for currency in currencies %}
+                        <option value="{{ currency.name }}">{{ currency.name }} - {{ currency.country }}</option>
+                    {% endfor %}
+
+                {% endif %}
+
+            </select>
+            <div class="input-group-append">
+                <input class="btn btn-outline-secondary" type="submit" value="Submit" />
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
