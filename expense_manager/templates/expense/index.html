@@ -1,10 +1,97 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Expense</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Expense</li>
+          </ol>
+        </nav>
+        {% include "partials/_message.html" %}
+    </div>
+    <div class="col-md-2">
+      <!-- <button class="btn btn-primary" onclick="window.location.href='{% url 'add-expenses' %}';">
+        Add Expenses
+      </button> -->
+      <a href="{% url 'add-expenses' %}" class="btn btn-primary" style="height: 48px;align-items: center;justify-content: center;display: flex;">
+        Add Expenses
+      </a>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <input type="text" name="searchQuery" id="searchQuery" placeholder="Search" class="form-control" title="In case of Date, Try in yyyy-mm-dd">
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h1>
-    Hello Universe....
-</h1>
+    <div class="container" id="app-table">
+      <table class="table table-stripped table-hover">
+        <thead>
+          <th>Amount ( {{user_currency}} )</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th></th>
+          <th></th>
+        </thead>
+        {% for exp in page_obj %}
+              <tbody>
+                  <td>{{exp.amount}}</td>
+                  <td>{{exp.category}}</td>
+                  <td>{{exp.description}}</td>
+                  <td>{{exp.date}}</td>
+                  <td><a href="{% url 'edit-expenses' exp.id %}" class="btn btn-sm btn-secondary">edit</a></td>
+                  <td><a href="{% url 'delete-expenses' exp.id %}" class="btn btn-sm btn-danger">delete</a></td>
+              </tbody>
+        {% endfor %}
+      </table>
+    </div>
+    <div class="container" id="no-result"><h3>No Result Found</h3></div>
+    <div class="container" id="table-output">
+      <table class="table table-stripped table-hover">
+        <thead>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody class="tbody">
+        </tbody>
+      </table>
+    </div>
 
+    <div class="container" id="paginator-container">
+      <div class="container d-flex justify-content-between">
+        <div>
+          Showing page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        </div>
+        <div>
+          <ul class="pagination align-right float-right mr-auto">
+            {% if page_obj.has_previous %}
+                  <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}><a class="page-link" href="?page=1" >&laquo; 1</a></li>
+                  <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a></li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                  <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a></li>
+                  <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">{{ page_obj.paginator.num_pages }}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/searchExpenses.js' %}"></script>
 {% endblock content %}
 

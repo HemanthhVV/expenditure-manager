@@ -7,32 +7,33 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Expense</a></li>
                 <li class="breadcrumb-item"><a href="{% url "expenses" %}">My Expense</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Add expenses</li>
+                <li class="breadcrumb-item active" aria-current="page">Edit expenses</li>
             </ol>
         </nav>
-        <form action="{% url 'add-expenses' %}" method="post">
+        <form action="{% url 'edit-expenses' expenses.id %}" method="post">
             {% csrf_token %}
             <div class="card">
                 <div class="card-body">
                     {% include "partials/_message.html" %}
                     <div class="form-group">
                         <label for="amount_field">Amount</label>
-                        <input type="number" class="form-control" name="amount_field" id="amount_field" aria-describedby="amountField" placeholder="Enter the amount" value="{{value.amount_field}}">
+                        <input type="number" class="form-control" name="amount_field" id="amount_field" aria-describedby="amountField" placeholder="Enter the amount" value="{{value.amount}}">
                     </div>
 
                     <div class="form-group">
                         <label for="date_field">Date</label>
-                        <input type="date" class="form-control" name="date_field" id="date_field" placeholder="date" value="{{ value.date_field |  date:"m-d-Y" }}">
+                        <input type="date" class="form-control" name="date_field" id="date_field" placeholder="date" value="{{value.date}}">
                     </div>
 
                     <div class="form-group">
                         <label for="description_field">Descripiton</label>
-                        <input type="text" class="form-control" name="description_field" id="description_field" placeholder="description for the expenses" value="{{value.description_field}}">
+                        <input type="text" class="form-control" name="description_field" id="description_field" placeholder="description for the expenses" value="{{value.description}}">
                     </div>
 
                     <div class="form-group">
                         <label for="category_field">Category</label>
                         <select class="form-control" name="category_field" id="">
+                            <option selected value="{{value.category}}">{{value.category}}</option>
                             {% for category in categories %}
                                 <option name='category' value="{{category.name}}">{{category.name}}</option>
                             {% endfor %}
