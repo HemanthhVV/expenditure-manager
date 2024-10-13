@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url "incomes" %}">Incomes</a></li>
+                <li class="breadcrumb-item"><a href="{% url "incomes" %}">My Income</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Income</li>
+            </ol>
+        </nav>
+        <form action="{% url 'edit-incomes' incomes.id %}" method="post">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    {% include "partials/_message.html" %}
+                    <div class="form-group">
+                        <label for="amount_field">Amount</label>
+                        <input type="number" class="form-control" name="amount_field" id="amount_field" aria-describedby="amountField" placeholder="Enter the amount" value="{{value.amount}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date_field">Date</label>
+                        <input type="date" class="form-control" name="date_field" id="date_field" placeholder="date" value="{{value.date}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description_field">Descripiton</label>
+                        <input type="text" class="form-control" name="description_field" id="description_field" placeholder="description for the expenses" value="{{value.description}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="source_field">Source</label>
+                        <select class="form-control" name="source_field" id="">
+                            <option selected value="{{value.source}}">{{value.source}}</option>
+                            {% for source in sources %}
+                                <option name='source' value="{{source.name}}">{{source.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+</div>
+
+{% endblock content %}
