@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block branding %}
+<h1 id="site-name">
+    <img src="{% static 'img/admin.png' %}" alt="Company Logo" style="width: 30px; height: auto;">
+    <a href="{% url 'admin:index' %}">Administration Page</a>
+</h1>
+{% endblock %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static "css/adminstyles.css" %}">
+{% endblock extrastyle %}
