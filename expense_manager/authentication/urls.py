@@ -9,5 +9,7 @@ urlpatterns = [
     path('validateEmail',csrf_exempt(views.EmailValidation.as_view()), name="emailvalidation"),
     path('verificationEmail/<uuid>/<token>',views.VerificationView.as_view(),name='verification'),
     path('login',csrf_exempt(views.LoginView.as_view()),name="login"),
-    path('logout',csrf_exempt(views.LogoutView.as_view()),name="logout")
+    path('logout',csrf_exempt(views.LogoutView.as_view()),name="logout"),
+    path("reset-password",csrf_exempt(views.ResetPasswordView.as_view()) , name="reset-password"),
+    path("set-new-password/<uuid>/<token>", csrf_exempt(views.SetNewPassword.as_view()), name="set-new-password")
 ]
