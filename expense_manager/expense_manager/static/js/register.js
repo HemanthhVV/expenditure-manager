@@ -2,11 +2,12 @@
 
 const usernameField = document.querySelector("#usernameField")
 const feedbackArea = document.querySelector(".invalid-feedback")
-const emailField = document.querySelector("#emailField")
-const emailfeedbackArea = document.querySelector(".invalid-mail")
+const emailField = document.querySelector(".emailField")
+const emailfeedbackArea = document.querySelector("#invalid-email-feedback")
 const togglepwd = document.querySelector(".togglePWD")
 const passwordField = document.querySelector("#passwordField")
 const submitbtn = document.querySelector(".submit-btn")
+
 
 togglepwd.addEventListener("click", (e) =>{
     if(togglepwd.textContent === "SHOW"){
@@ -17,6 +18,7 @@ togglepwd.addEventListener("click", (e) =>{
         passwordField.setAttribute("type","password")
     }
 })
+
 
 usernameField.addEventListener("keyup",(e) =>{
     const username = e.target.value;
@@ -44,7 +46,7 @@ usernameField.addEventListener("keyup",(e) =>{
 emailField.addEventListener("keyup",(e)=>{
     const emailid = e.target.value;
     emailField.classList.remove("is-invalid");
-    // emailfeedbackArea.style.display = "none";
+    emailfeedbackArea.style.display = "none";
 
     if(emailid.length > 0){
         fetch('/authentication/validateEmail',{
@@ -54,11 +56,11 @@ emailField.addEventListener("keyup",(e)=>{
     .then((data)=>{
             console.log(data)
             if(data.email_error){
+                // console.log("Insides that");
                 submitbtn.setAttribute("disabled", "disabled");
                 emailField.classList.add("is-invalid");
-                submitbtn.disabled = true;
-                // emailfeedbackArea.style.display = "block";
-                // emailfeedbackArea.innerHTML = `<p>${data.email_error}</p>`;
+                emailfeedbackArea.style.display = "block";
+                emailfeedbackArea.innerHTML = `<p>${data.email_error}</p>`;
             }else{
                 submitbtn.removeAttribute("disabled");
             }

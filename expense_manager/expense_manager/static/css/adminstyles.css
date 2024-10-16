@@ -1,0 +1,34 @@
+#header {
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    background: #044113;
+}
+
+#site-name a:link,
+#site-name a:visited {
+    color: var(--accent);
+}
+
+div.breadcrumbs {
+    background: #135a25;
+    padding: 10px 40px;
+    border: none;
+    color: yellow;
+    text-align: left;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+    margin: 0;
+    padding: 8px;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    text-align: left;
+    background: #044113;
+    color: var(--header-link-color);
+}
