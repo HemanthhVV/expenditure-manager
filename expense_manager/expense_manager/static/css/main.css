@@ -81,3 +81,21 @@
     color: blue;
     transform: scale(1);
 }
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    /* Adjust this value as needed */
+}
+
+.chart {
+    width: 100%;
+    height: 100%;
+}
+
+#chart2{
+    width: 100%;
+    height: 50px;
+}
