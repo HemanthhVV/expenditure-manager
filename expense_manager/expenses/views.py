@@ -5,11 +5,66 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Category,Expense
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 import json
+from collections import defaultdict,Counter
 from userpreferences.models import UserPreference
+import datetime,csv,xlwt
+from django.db.models import Count
 
 # Create your views here.
+def export_excel(request):
+    response = HttpResponse(content_type='type/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Expenses_'+str(datetime.date.today())+'.xlsx'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet("Expenses")
+    row_num = 0
+    columns = ['Amount','Date','Description','Category']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num,col_num,columns[col_num])
+
+    objs = Expense.objects.values_list('amount','date','description','category')
+    for obj in objs:
+        row_num+=1
+        for col_num in range(len(obj)):
+            ws.write(row_num,col_num,obj[col_num])
+    wb.save(response)
+    return response
+
+def export_csv(request):
+    response = HttpResponse(content_type='type/csv')
+    response['Content-Disposition'] = 'attachment; filename=Expenses_'+str(datetime.date.today())+'.csv'
+    writer = csv.writer(response)
+    writer.writerow(['Amount','Date','Description','Category'])
+    objs = Expense.objects.filter(owner=request.user)
+    for obj in objs:
+        writer.writerow([obj.amount,obj.date,obj.description,obj.category])
+    return response
+
+def stats_expenses(request):
+    return render(request,"expense/stats_expenses.html")
+
+def expense_summary_category(request):
+    if request.method == 'GET':
+        today_date = datetime.date.today()
+        filtered_date = today_date - datetime.timedelta(30*6)
+        all_data = Expense.objects.values_list("date","amount").order_by('date')
+        # category_wise = dict(Counter(Expense.objects.values_list('category')))
+        category_wise_data = Expense.objects.values('category')\
+                            .annotate(category_count=Count('category'))\
+                                .values_list('category','category_count')
+        category_data = {k:v for k,v in category_wise_data}
+        date_wise_data = {k.strftime("%Y-%m-%d"):v for k,v in all_data}
+        expenses = Expense.objects.filter(
+            owner=request.user,
+            date__gte=filtered_date,date__lte=today_date
+            )
+        expense_wise = defaultdict(int)
+        for expense in expenses:
+            expense_wise[expense.category] += expense.amount
+        return JsonResponse({'expense_wise':expense_wise,'date_wise':date_wise_data,'category_wise':category_data},safe=False)
+
 
 def search_expenses(request):
     if request.method == 'POST':
