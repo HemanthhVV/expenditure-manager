@@ -5,11 +5,108 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Income,Source
 from django.core.paginator import Paginator
-from django.http import JsonResponse
-import json
+from django.http import JsonResponse,HttpResponse
+import json,xlwt,csv
 from userpreferences.models import UserPreference
+import datetime
+from collections import defaultdict
+from django.db.models import Count
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 # Create your views here.
+def export_pdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Income_'+str(datetime.date.today())+'.pdf'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    p.setFont("Helvetica-Bold", 16)
+    image_path = '../expense_manager/expense_manager/static/img/expense.png'  # Replace with your image file path
+    p.drawImage(image_path, 100, height - 80, width=80, height=60)
+    p.drawString(100, height - 100, "Income Report")  # Header title
+    p.setFont("Helvetica", 12)
+    p.drawString(100, height - 120, f"Generated on: {datetime.date.today()}")  # Subheader
+
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(100, height - 150, "Amount")
+    p.drawString(200, height - 150, "Date")
+    p.drawString(300, height - 150, "Description")
+    p.drawString(400, height - 150, "Source")
+
+    y_position = height - 180  # Start position for the table rows
+    objs = Income.objects.filter(owner=request.user)
+    for obj in objs:
+        p.setFont("Helvetica", 12)
+        p.drawString(100, y_position, str(obj.amount))
+        p.drawString(200, y_position, str(obj.date))
+        p.drawString(300, y_position, obj.description)
+        p.drawString(400, y_position, obj.source)
+        y_position -= 20  # Move down for the next row
+
+    # Custom footer
+    p.setFont("Helvetica-Oblique", 8)
+    p.drawString(100, 20, "Income Report downloaded from Expenditure manager")
+
+    p.showPage()
+    p.save()
+
+    return response
+
+def export_excel(request):
+    response = HttpResponse(content_type='type/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Income_'+str(datetime.date.today())+'.xlsx'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet("Expenses")
+    row_num = 0
+    columns = ['Amount','Date','Description','Source']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num,col_num,columns[col_num])
+
+    objs = Income.objects.values_list('amount','date','description','source')
+    for obj in objs:
+        row_num+=1
+        for col_num in range(len(obj)):
+            ws.write(row_num,col_num,obj[col_num])
+    wb.save(response)
+    return response
+
+def export_csv(request):
+    response = HttpResponse(content_type='type/csv')
+    response['Content-Disposition'] = 'attachment; filename=Income_'+str(datetime.date.today())+'.csv'
+    writer = csv.writer(response)
+    writer.writerow(['Amount','Date','Description','Source'])
+    objs = Income.objects.filter(owner=request.user)
+    for obj in objs:
+        writer.writerow([obj.amount,obj.date,obj.description,obj.source])
+    return response
+
+def stats_incomes(request):
+    return render(request,"expense/stats_incomes.html")
+
+def income_summary_category(request):
+    if request.method == 'GET':
+        today_date = datetime.date.today()
+        filtered_date = today_date - datetime.timedelta(30*6)
+        all_data = Income.objects.values_list("date","amount").order_by('date')
+        # category_wise = dict(Counter(Income.objects.values_list('source')))
+        category_wise_data = Income.objects.values('source')\
+                            .annotate(source_count=Count('source'))\
+                                .values_list('source','source_count')
+        category_data = {k:v for k,v in category_wise_data}
+        date_wise_data = {k.strftime("%Y-%m-%d"):v for k,v in all_data}
+        expenses = Income.objects.filter(
+            owner=request.user,
+            date__gte=filtered_date,date__lte=today_date
+            )
+        expense_wise = defaultdict(int)
+        for expense in expenses:
+            expense_wise[expense.source] += expense.amount
+        return JsonResponse({'expense_wise':expense_wise,'date_wise':date_wise_data,'category_wise':category_data},safe=False)
+
 
 def search_incomes(request):
     if request.method == 'POST':

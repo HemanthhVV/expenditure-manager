@@ -11,8 +11,50 @@ from collections import defaultdict,Counter
 from userpreferences.models import UserPreference
 import datetime,csv,xlwt
 from django.db.models import Count
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 
 # Create your views here.
+def export_pdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Expense_'+str(datetime.date.today())+'.pdf'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    p.setFont("Helvetica-Bold", 16)
+    image_path = '../expense_manager/expense_manager/static/img/expense.png'  # Replace with your image file path
+    p.drawImage(image_path, 100, height - 80, width=80, height=60)
+    p.drawString(100, height - 100, "Expense Report")  # Header title
+    p.setFont("Helvetica", 12)
+    p.drawString(100, height - 120, f"Generated on: {datetime.date.today()}")  # Subheader
+
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(100, height - 150, "Amount")
+    p.drawString(200, height - 150, "Date")
+    p.drawString(300, height - 150, "Description")
+    p.drawString(400, height - 150, "Category")
+
+    y_position = height - 180  # Start position for the table rows
+    objs = Expense.objects.filter(owner=request.user)
+    for obj in objs:
+        p.setFont("Helvetica", 12)
+        p.drawString(100, y_position, str(obj.amount))
+        p.drawString(200, y_position, str(obj.date))
+        p.drawString(300, y_position, obj.description)
+        p.drawString(400, y_position, obj.category)
+        y_position -= 20  # Move down for the next row
+
+    # Custom footer
+    p.setFont("Helvetica-Oblique", 8)
+    p.drawString(100, 20, "Expense Report downloaded from Expenditure manager")
+
+    p.showPage()
+    p.save()
+
+    return response
+
 def export_excel(request):
     response = HttpResponse(content_type='type/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=Expenses_'+str(datetime.date.today())+'.xlsx'
