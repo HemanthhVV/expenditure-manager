@@ -8,7 +8,7 @@ from django.contrib import messages
 
 def index(request):
     exists = UserPreference.objects.filter(user=request.user).exists()
-    # userpreference = None
+    userpreference = None
     if exists:
         userpreference = UserPreference.objects.get(user=request.user)
     currency_data = []
