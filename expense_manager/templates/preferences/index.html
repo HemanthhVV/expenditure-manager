@@ -22,7 +22,12 @@
                         <option value="{{ currency.name }}">{{ currency.name }} - {{ currency.country }}</option>
                     {% endfor %}
 
+                {% else %}
+                    {% for currency in currencies %}
+                        <option value="{{ currency.name }}">{{ currency.name }} - {{ currency.country }}</option>
+                    {% endfor %}
                 {% endif %}
+
 
             </select>
             <div class="input-group-append">
