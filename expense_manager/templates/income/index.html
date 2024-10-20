@@ -18,12 +18,23 @@
         Add Expenses
       </button> -->
       <a href="{% url 'add-incomes' %}" class="btn btn-primary" style="height: 48px;align-items: center;justify-content: center;display: flex;">
-        Add Income
+        <i class="fa fa-calendar-plus-o" aria-hidden="true"style="padding-right: 8px;"></i>Add Income
       </a>
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-md-8"></div>
+        <div class="col-md-8 d-flex justify-content-between">
+          <a href="{% url "export-pdf" %}">
+          <button class="btn btn-secondary" style="height: 40px; width: 80px; background-color: rgb(145, 1, 1); color: white;"><span class="fa fa-file-pdf-o" aria-hidden="true" style="padding-right: 8px;"></span><b>pdf</b></button>
+          </a>
+          <a href="{% url "export-xlsx" %}">
+          <button class="btn btn-secondary" style="height: 40px; width: 80px; background-color: rgb(42, 143, 11); color: white;"><i class="fa fa-file-excel-o" aria-hidden="true"></i>
+            <b>xlsx</b></button>
+          </a>
+          <a href="{% url "export-csv" %}">
+          <button class="btn btn-secondary" style="height: 40px; width: 80px; background-color: rgb(4, 19, 148); color: white;"><i class="fa fa-file-text-o" aria-hidden="true" style="padding-right: 8px;"></i><b>csv</b></button>
+          </a>
+        </div>
         <div class="col-md-4">
           <div class="form-group">
             <input type="text" name="searchQuery" id="searchQuery" placeholder="Search" class="form-control" title="In case of Date, Try in yyyy-mm-dd">
@@ -48,8 +59,8 @@
                   <td>{{inc.source}}</td>
                   <td>{{inc.description}}</td>
                   <td>{{inc.date}}</td>
-                  <td><a href="{% url 'edit-incomes' inc.id %}" class="btn btn-sm btn-secondary">edit</a></td>
-                  <td><a href="{% url 'delete-incomes' inc.id %}" class="btn btn-sm btn-danger">delete</a></td>
+                  <td><a href="{% url 'edit-incomes' inc.id %}" class="btn btn-sm btn-secondary" style="background-color: orange; color: white;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>edit</a></td>
+                  <td><a href="{% url 'delete-incomes' inc.id %}" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i>delete</a></td>
               </tbody>
         {% endfor %}
       </table>
