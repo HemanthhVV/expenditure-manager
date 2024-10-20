@@ -3,6 +3,14 @@ from .models import Expense,Category
 # Register your models here.
 
 
-admin.site.register(Expense)
+class ToShowAttributesInExpenses(admin.ModelAdmin):
+    list_display = ("amount",
+                    "date",
+                    "description",
+                    "owner",
+                    "category",)
+
+
+admin.site.register(Expense,ToShowAttributesInExpenses)
 admin.site.register(Category)
 
