@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {
-            "src": "project/wsgi.py",
+            "src": "expense_manager/wsgi.py",
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "15mb",
@@ -24,7 +24,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "project/wsgi.py"
+            "dest": "expense_manager/wsgi.py"
         }
     ]
 }
