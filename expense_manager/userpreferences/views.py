@@ -4,6 +4,7 @@ import json,os
 from django.conf import settings
 from .models import UserPreference
 from django.contrib import messages
+import time
 # Create your views here.
 
 def index(request):
@@ -27,9 +28,11 @@ def index(request):
             userpreference.currency = currency_selected
             userpreference.save()
         else:
-            UserPreference.objects.update(user=request.user,currency=currency_selected)
+            UserPreference.objects.create(user=request.user,currency=currency_selected)
+
         messages.success(request,"Preferences saved Successfully.")
         # print("=================> ",str(currency_selected))
         # print("=================> ",currency_selected['curr'])
         # return render(request,'preferences/index.html',{'currencies':currency_data,'userpreference':userpreference})
+        time.sleep(0.25) #reflect in db
         return redirect('expenses')
