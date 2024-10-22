@@ -14,3 +14,9 @@ Content-Type: application/json
     "email":"chad@gmail.co"
 }
 
+###
+
+GET http://127.0.0.1:8000/expense-summary-category
+
+###
+POST http://127.0.0.1:8000/expense-summary-category
