@@ -1,5 +1,5 @@
 from asyncio.log import logger
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 import json,os
 from django.conf import settings
 from .models import UserPreference
@@ -27,8 +27,9 @@ def index(request):
             userpreference.currency = currency_selected
             userpreference.save()
         else:
-            UserPreference.objects.create(user=request.user,currency=currency_selected)
-        messages.success(request,"Currency saved Successfully.")
-        print("=================> ",str(currency_selected))
+            UserPreference.objects.update(user=request.user,currency=currency_selected)
+        messages.success(request,"Preferences saved Successfully.")
+        # print("=================> ",str(currency_selected))
         # print("=================> ",currency_selected['curr'])
-        return render(request,'preferences/index.html',{'currencies':currency_data,'userpreference':userpreference})
+        # return render(request,'preferences/index.html',{'currencies':currency_data,'userpreference':userpreference})
+        return redirect('expenses')

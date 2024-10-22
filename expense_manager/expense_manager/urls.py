@@ -22,5 +22,5 @@ urlpatterns = [
     path("incomes/", include('incomes.urls'), name="incomes_site"),
     path("authentication/", include('authentication.urls'), name="authentication"),
     path("preferences/", include('userpreferences.urls') , name="userpreferences"),
-    path('admin/', admin.site.urls),
+    path('registered/admin/', admin.site.urls),
 ]
