@@ -29,8 +29,6 @@ searchQueryField.addEventListener("keyup",(e)=>{
             appTable.style.display = 'none';
             tableOutput.style.display = 'block';
             no_result.style.display = 'none';
-            console.log(data);
-            console.log(data.length);
 
                 if(data.length === 0){
                     tableOutput.style.display = 'none';
@@ -51,7 +49,8 @@ searchQueryField.addEventListener("keyup",(e)=>{
                         `
                     });
                 }
-        })
+        });
+        tbody.innerHTML = "";
     }else{
         tableOutput.style.display = 'none';
         appTable.style.display = 'block';
