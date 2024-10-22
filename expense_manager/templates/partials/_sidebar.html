@@ -4,13 +4,7 @@
       <div class="position-sticky pt-3 sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url "expenses" %}">
-              <span data-feather="home" class="align-text-bottom"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url "expenses" %}">
               <span data-feather="file" class="align-text-bottom"></span>
               Expenses
             </a>
@@ -54,12 +48,6 @@
             <a class="nav-link" href="{% url "preferences" %}">
               <span data-feather="file-text" class="align-text-bottom"></span>
               General Settings
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text" class="align-text-bottom"></span>
-              User Preferences
             </a>
           </li>
         </ul>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Income</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Incomes</li>
+          </ol>
+        </nav>
+        {% include "partials/_message.html" %}
+    </div>
+    <div class="col-md-2">
+      <!-- <button class="btn btn-primary" onclick="window.location.href='{% url 'add-incomes' %}';">
+        Add Expenses
+      </button> -->
+      <a href="{% url 'add-incomes' %}" class="btn btn-primary" style="height: 48px;align-items: center;justify-content: center;display: flex;">
+        <i class="fa fa-calendar-plus-o" aria-hidden="true"style="padding-right: 8px;"></i>Add Income
+      </a>
+    </div>
+    <div class="container text-center d-flex justify-content-center " style="height: 100vh;">
+    <div class="row">
+        <h1>Start Adding Incomes</h1>
+    </div>
+    </div>
+
+</div>
+<script src="{% static 'js/searchIncomes.js' %}"></script>
+{% endblock content %}
+
