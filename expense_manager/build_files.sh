@@ -6,7 +6,8 @@ pwd
 echo "printing dir"
 ls
 echo "done printing dir"
-python -m venv venv/
+python3.9 --version
+python3.9 -m venv venv/
 echo "activated"
 ls venv/
 source venv/bin/activate
