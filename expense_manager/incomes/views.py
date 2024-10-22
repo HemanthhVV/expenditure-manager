@@ -91,9 +91,9 @@ def income_summary_category(request):
     if request.method == 'GET':
         today_date = datetime.date.today()
         filtered_date = today_date - datetime.timedelta(30*6)
-        all_data = Income.objects.values_list("date","amount").order_by('date')
+        all_data = Income.objects.filter(owner=request.user).values_list("date","amount").order_by('date')
         # category_wise = dict(Counter(Income.objects.values_list('source')))
-        category_wise_data = Income.objects.values('source')\
+        category_wise_data = Income.objects.filter(owner=request.user).values('source')\
                             .annotate(source_count=Count('source'))\
                                 .values_list('source','source_count')
         category_data = {k:v for k,v in category_wise_data}
@@ -117,21 +117,27 @@ def search_incomes(request):
                     Income.objects.filter(description__icontains=search_str,owner = request.user) |
                     Income.objects.filter(source__icontains=search_str,owner = request.user)
                     )
-
         search_data = expenses.values()
+        import pdb
+        pdb.set_trace()
         return JsonResponse(list(search_data),safe=False)
 
-
-
-
+def new_registerer(request):
+    return render(request,'income/empty.html')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     income = Income.objects.filter(owner=request.user)
+    if not income:
+        return redirect('new-user-income')
     paginator = Paginator(income,3)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator,page_number)
-    user_currency = UserPreference.objects.get(user = request.user)
+    try:
+        user_currency = UserPreference.objects.get(user = request.user)
+    except:
+        messages.info(request,"Please the preferred currency in order to add expenditure")
+        return redirect('preferences')
     context = {
         "incomes" : income,
         "page_obj" : page_obj,

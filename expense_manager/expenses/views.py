@@ -13,6 +13,7 @@ import datetime,csv,xlwt
 from django.db.models import Count
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from django.urls import reverse
 
 # Create your views here.
 def export_pdf(request):
@@ -84,16 +85,18 @@ def export_csv(request):
         writer.writerow([obj.amount,obj.date,obj.description,obj.category])
     return response
 
+
 def stats_expenses(request):
     return render(request,"expense/stats_expenses.html")
+
 
 def expense_summary_category(request):
     if request.method == 'GET':
         today_date = datetime.date.today()
         filtered_date = today_date - datetime.timedelta(30*6)
-        all_data = Expense.objects.values_list("date","amount").order_by('date')
+        all_data = Expense.objects.filter(owner=request.user).values_list("date","amount").order_by('date')
         # category_wise = dict(Counter(Expense.objects.values_list('category')))
-        category_wise_data = Expense.objects.values('category')\
+        category_wise_data = Expense.objects.filter(owner=request.user).values('category')\
                             .annotate(category_count=Count('category'))\
                                 .values_list('category','category_count')
         category_data = {k:v for k,v in category_wise_data}
@@ -121,17 +124,22 @@ def search_expenses(request):
         search_data = expenses.values()
         return JsonResponse(list(search_data),safe=False)
 
+def new_registerer(request):
+    return render(request,"expense/empty.html")
 
-
-
-
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='/authentication/login')
 def index(request):
     expense = Expense.objects.filter(owner=request.user)
+    if not expense:
+       return redirect('new-user')
     paginator = Paginator(expense,3)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator,page_number)
-    user_currency = UserPreference.objects.get(user = request.user)
+    try:
+        user_currency = UserPreference.objects.get(user = request.user)
+    except:
+        messages.info(request,"Please choose the preferred currency in order to add expenditure")
+        return redirect('preferences')
     context = {
         "expenses" : expense,
         "page_obj" : page_obj,

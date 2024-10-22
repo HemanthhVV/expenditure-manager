@@ -12,5 +12,6 @@ urlpatterns = [
     path("stats-expenses/",views.stats_expenses, name="stats-expenses"),
     path("export-csv",views.export_csv,name='export-csv-expense'),
     path("export-xlsx",views.export_excel, name="export-xlsx-expense"),
-    path("export-pdf", views.export_pdf, name="export-pdf-expense")
+    path("export-pdf", views.export_pdf, name="export-pdf-expense"),
+    path("new-user",views.new_registerer,name="new-user")
 ]
