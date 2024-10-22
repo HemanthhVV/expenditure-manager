@@ -125,7 +125,7 @@ class LoginView(View):
             messages.error(request,"Invalid Credentials, Register First")
             return render(request,'authentication/login.html')
         messages.error(request=request,message="Please fill all the fields")
-        return render(request,'authentication/login.html')
+        return redirect('expenses')
 
 class VerificationView(View):
     def get(self,request,uuid,token):
@@ -195,8 +195,6 @@ class RegistrationView(View):
                 query_parameter_for_activation = reverse('verification',kwargs={'uuid':uuid,'token':token_generator.make_token(user)})
                 activation_url = 'http://'+domain+query_parameter_for_activation
 
-                user.save()
-
                 verification_mail_sent = send_mail(
                     subject="Registered Sucessfully!",
                     message=f"Thanks for registering in this app, None of your data has been cached.\nTo Verify your mail:\n{activation_url}",
@@ -212,6 +210,7 @@ class RegistrationView(View):
                 print(force_bytes(user.pk))
                 print(force_str(force_bytes(user.pk)))
 
+                user.save()
                 messages.success(request=request,message="Register Successfully, Check your mail for activation.")
                 return render(request=request,template_name="authentication/register.html")
             else:
