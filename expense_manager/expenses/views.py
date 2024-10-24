@@ -25,8 +25,8 @@ def export_pdf(request):
     width, height = A4
 
     p.setFont("Helvetica-Bold", 16)
-    image_path = '../expense_manager/expense_manager/static/img/expense.png'  # Replace with your image file path
-    p.drawImage(image_path, 100, height - 80, width=80, height=60)
+    # image_path = '../expense_manager/expense_manager/static/img/expense.png'  # Replace with your image file path
+    # p.drawImage(image_path, 100, height - 80, width=80, height=60)
     p.drawString(100, height - 100, "Expense Report")  # Header title
     p.setFont("Helvetica", 12)
     p.drawString(100, height - 120, f"Generated on: {datetime.date.today()}")  # Subheader
