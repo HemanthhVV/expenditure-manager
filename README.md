@@ -15,7 +15,6 @@ The Expense Manager is a web application designed to help users track their expe
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
